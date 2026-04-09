@@ -21,7 +21,7 @@ Esta es una aplicación backend desarrollada con Java y Spring Boot que permite 
 
 - Lombok (Para reducir código boilerplate como Getters y Setters)
 
-### Spring Web (Para la creación de endpoints REST)
+- Spring Web (Para la creación de endpoints REST)
 
 ### Arquitectura del Proyecto
 El proyecto sigue una arquitectura de capas estándar:
