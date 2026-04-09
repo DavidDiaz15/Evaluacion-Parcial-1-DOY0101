@@ -29,6 +29,10 @@ public class LibroService {
 
     }
 
+    // Nueva feature
+    public List<Libro> getLibrosPorCategoria(String categoria) {
+        return libroRepository.buscarPorCategoria(categoria);
+
     public String deleteLibro(String nombre) {
         libroRepository.eliminar(nombre);
         return "Producto eliminado";
