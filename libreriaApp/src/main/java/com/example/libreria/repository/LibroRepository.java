@@ -30,15 +30,9 @@ public class LibroRepository {
             return lib;
         }
 
+        //Mejorado
         public void eliminar(String nombre) {
-
-            Libro libro = buscarPorNombre(nombre);
-            if (libro != null){
-                listaLibros.remove(libro);
-            }
-
-            listaLibros.removeIf(x -> x.getNombre().equalsIgnoreCase(nombre));
-
+        listaLibros.removeIf(libro -> libro.getNombre().equalsIgnoreCase(nombre));
         }
 
 
