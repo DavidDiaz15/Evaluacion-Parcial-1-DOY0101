@@ -1,8 +1,10 @@
-**1.- Convenciones de commit
+1.- Convenciones de commit
 
 Se utilizan las convenciones establecidas por https://www.conventionalcommits.org/es/v1.0.0-beta.3/. Para más información revisar la página web.
 
-**2.- Flujos de Merge (GitFlow)
+_______________________________________________________________________________________________________________________________________
+
+2.- Flujos de Merge (GitFlow)
 
 - Las Features se desarrollan en su rama propia y siempre se integran a develop mediante un Pull Request.
 
@@ -10,7 +12,9 @@ Se utilizan las convenciones establecidas por https://www.conventionalcommits.or
 
 - Los lanzamientos se realizan mediante un Pull Request desde develop hacia main una vez que el código esté probado y sea estable.
 
-**3. Nombre de las ramas del repositorio:
+_______________________________________________________________________________________________________________________________________
+
+3. Nombre de las ramas del repositorio:
 
 - main: Rama principal del Git. Aqui se encuentra el código estable y probado.
 
@@ -20,6 +24,8 @@ Se utilizan las convenciones establecidas por https://www.conventionalcommits.or
 
 - hotfix/: Rama para correcciones urgentes del código.
 
-**4.- Estrategias de Revisión
+_______________________________________________________________________________________________________________________________________
+
+4.- Estrategias de Revisión
 
 - Pull Requests: Ningún código se envía a las rama main sin un PR revisado por los colaboradores.
