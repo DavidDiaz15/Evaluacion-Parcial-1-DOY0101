@@ -1,0 +1,25 @@
+**1.- Convenciones de commit
+
+Se utilizan las convenciones establecidas por https://www.conventionalcommits.org/es/v1.0.0-beta.3/. Para más información revisar la página web.
+
+**2.- Flujos de Merge (GitFlow)
+
+- Las Features se desarrollan en su rama propia y siempre se integran a develop mediante un Pull Request.
+
+- Los Hotfixes se crean para parchar errores y se integran de vuelta a main y a develop.
+
+- Los lanzamientos se realizan mediante un Pull Request desde develop hacia main una vez que el código esté probado y sea estable.
+
+**3. Nombre de las ramas del repositorio:
+
+- main: Rama principal del Git. Aqui se encuentra el código estable y probado.
+
+- develop: Rama de integración de versiones no estables o por probar. Aquí se juntan todas las nuevas funcionalidades.
+
+- feature/David-Diaz Rama que ocupa David para realizar sus modificaciones al código y luego enviarlas al develop.
+
+- hotfix/: Rama para correcciones urgentes del código.
+
+**4.- Estrategias de Revisión
+
+- Pull Requests: Ningún código se envía a las rama main sin un PR revisado por los colaboradores.
