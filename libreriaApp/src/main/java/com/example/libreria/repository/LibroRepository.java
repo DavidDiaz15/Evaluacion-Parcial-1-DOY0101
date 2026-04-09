@@ -35,5 +35,17 @@ public class LibroRepository {
         listaLibros.removeIf(libro -> libro.getNombre().equalsIgnoreCase(nombre));
         }
 
+        // Metodo que busca libros de una categoria en eespecifico y los retorna en una lista
+        public List<Libro> buscarPorCategoria(String categoria) {
+            List<Libro> librosPorCategoria = new ArrayList<>();
+            for(Libro libro : listaLibros) {
+                if(libro.getCategoria().equalsIgnoreCase(categoria)) {
+                    librosPorCategoria.add(libro);
+                }
+            }
+            return librosPorCategoria;
+        }
+
+
 
 }
