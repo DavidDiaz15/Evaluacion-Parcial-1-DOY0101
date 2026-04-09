@@ -44,3 +44,13 @@ La URL base para todos los endpoints es: http://localhost:8080/api/v1/productos
 | GET    | /categoria/{categoria}       | Busca y retorna todos los libros pertenecientes a una categoría.    |
 | POST   | /               | Agrega un nuevo libro al sistema.                                                |
 | DELETE | /{nombre}       | Elimina un libro específico por su nombre.                                       |
+
+---
+
+## Flujos de Merge utilizado: GitFlow
+
+Se utilizó GitFlow dado a las branchs intuitivas, que permiten un excelente trabajo colaborativo, ya que las features se desarrollan en su rama propia y siempre se integran a develop mediante un Pull Request el cual es revisado por los colaboradores.
+
+De igual manera, la branch Hotfixes nos va a permitir parchar los errores críticos que surgen.
+
+Por último, elegimos este flujo dado que los lanzamientos de versiones se realizan mediante un Pull Request desde develop hacia main una vez que el código esté probado.
