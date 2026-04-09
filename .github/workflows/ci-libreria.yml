@@ -1,0 +1,20 @@
+name: CI_Duoc_Libreria
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
+      - name: Simulando validaciones
+        run: |
+          echo "Ejecutando LibroRepository del proyecto."
+          echo "Verificando el correcto funcionamiento del Spring Boot."
+          echo "Validacion el flujo del GitFlow."
