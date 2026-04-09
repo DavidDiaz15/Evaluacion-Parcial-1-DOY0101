@@ -33,6 +33,12 @@ public class LibroController {
 
     }
 
+    // Nueva feature
+    @GetMapping("/categoria/{categoria}")
+    public List<Libro> listarPorCategoria(@PathVariable String categoria) {
+        return libroService.getLibrosPorCategoria(categoria);
+    }
+
     @DeleteMapping("{nombre}")
     public String eliminarLbro(@PathVariable String nombre) {
         return  libroService.deleteLibro(nombre);
