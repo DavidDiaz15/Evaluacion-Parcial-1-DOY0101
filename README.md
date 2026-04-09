@@ -37,13 +37,13 @@ El proyecto sigue una arquitectura de capas estándar:
 ### Endpoints de la API
 La URL base para todos los endpoints es: http://localhost:8080/api/v1/productos
 
-| Método | Endpoint        | Descripción                                                                      |
-| :---:  |  :----:         |  :---:                                                                           |
-| GET    | /               | Obtiene la lista de todos los libros.                                            |
-| GET    | /{nombre}       | Busca un libro específico por su nombre.                                         |
-| GET    | /categoria/{categoria}       | Busca y retorna todos los libros pertenecientes a una categoría.    |
-| POST   | /               | Agrega un nuevo libro al sistema.                                                |
-| DELETE | /{nombre}       | Elimina un libro específico por su nombre.                                       |
+| Método | Endpoint        | Descripción                                                              |
+| :---:  |  :----:         |  :---:                                                                   |
+| GET    | /               | Obtiene la lista de todos los libros.                                    |
+| GET    | /buscar/{nombre}       | Busca un libro específico por su nombre.                          |
+| GET    | /categoria/{categoria} | Busca y retorna todos los libros pertenecientes a una categoría.  |
+| POST   | /               | Agrega un nuevo libro al sistema.                                        |
+| DELETE | /borrar/{nombre}       | Elimina un libro específico por su nombre.                        |
 
 ---
 
