@@ -27,7 +27,7 @@ public class LibroController {
 
     }
 
-    @GetMapping("{nombre}")
+    @GetMapping("/buscar/{nombre}")
     public Libro buscarLibro(@PathVariable String nombre) {
         return libroService.getLibroNombre(nombre);
 
@@ -39,7 +39,7 @@ public class LibroController {
         return libroService.getLibrosPorCategoria(categoria);
     }
 
-    @DeleteMapping("{nombre}")
+    @DeleteMapping("/borrar/{nombre}")
     public String eliminarLbro(@PathVariable String nombre) {
         return  libroService.deleteLibro(nombre);
     }
