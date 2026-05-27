@@ -3,26 +3,72 @@ name: CI_Duoc_Libreria
 on:
   push:
     branches: [ "develop" ]
+
   pull_request:
     branches: [ "main" ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout del codigo
         uses: actions/checkout@v4
+
       - name: Simulando validaciones
         run: |
           echo "Ejecutando LibroRepository del proyecto."
           echo "Verificando el correcto funcionamiento del Spring Boot."
           echo "Validacion el flujo del GitFlow."
 
+      # If your project uses Gradle, switch cache to "gradle" above.
+      # You may also add explicit build steps (mvn -q -DskipTests package / ./gradlew build)
+      # if your dependency resolution requires it.
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Authenticate Snyk CLI
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          snyk auth "$SNYK_TOKEN"
+
+      - name: Run Snyk test (JSON + SARIF)
+        env:
+          # Optional (uncomment if you use it):
+          # SNYK_ORG: ${{ vars.SNYK_ORG }}
+          # SNYK_ORG: ${{ secrets.SNYK_ORG }}
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          mkdir -p snyk-reports
+
+          # JSON report
+          snyk test \
+            --all-projects \
+            --json-file-output=snyk-reports/snyk-java-deps.json \
+            || true
+
+          # SARIF report
+          snyk test \
+            --all-projects \
+            --sarif-file-output=snyk-reports/snyk-java-deps.sarif \
+            || true
+
+      - name: Upload Snyk reports (artifacts)
+        uses: actions/upload-artifact@v4
+
+        with:
+          name: snyk-reports
+          path: snyk-reports/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Build with Maven
         run: mvn clean packages
-        
+
       - name: Set up Docker
         uses: docker/setup-docker-action@v5
 
       - name: Docker build
         run: docker build -t mytest:latest -f .
-       
