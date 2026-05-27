@@ -5,16 +5,24 @@ on:
     branches: [ "develop" ]
   pull_request:
     branches: [ "main" ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del codigo
         uses: actions/checkout@v4
-
       - name: Simulando validaciones
         run: |
           echo "Ejecutando LibroRepository del proyecto."
           echo "Verificando el correcto funcionamiento del Spring Boot."
           echo "Validacion el flujo del GitFlow."
+
+      - name: Build with Maven
+        run: mvn clean packages
+        
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v5
+
+      - name: Docker build
+        run: docker build -t mytest:latest -f .
+       
