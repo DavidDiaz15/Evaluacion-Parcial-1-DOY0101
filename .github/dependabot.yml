@@ -1,14 +1,13 @@
 # .github/dependabot.yml
 version: 2
 updates:
-  # Escaneo de dependencias de Java (Maven)
+ 
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
 
-  # Escaneo de la imagen base en el Dockerfile
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
