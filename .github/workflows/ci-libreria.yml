@@ -15,11 +15,15 @@ jobs:
       - name: Checkout del codigo
         uses: actions/checkout@v4
 
-      - name: Simulando validaciones
-        run: |
-          echo "Ejecutando LibroRepository del proyecto."
-          echo "Verificando el correcto funcionamiento del Spring Boot."
-          echo "Validacion el flujo del GitFlow."
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Ejecutar pruebas unitarias
+        run: mvn clean test
 
       # If your project uses Gradle, switch cache to "gradle" above.
       # You may also add explicit build steps (mvn -q -DskipTests package / ./gradlew build)
