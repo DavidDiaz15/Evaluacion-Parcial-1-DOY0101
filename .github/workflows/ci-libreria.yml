@@ -3,6 +3,7 @@ name: CI_Duoc_Libreria
 on:
   push:
     branches: [ "develop", "main" ]
+    
   pull_request:
     branches: [ "main" ]
 
