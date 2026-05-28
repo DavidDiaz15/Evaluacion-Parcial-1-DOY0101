@@ -69,7 +69,7 @@ jobs:
           retention-days: 14
 
       - name: Build with Maven
-        run: mvn clean packages
+        run: mvn clean package
 
       - name: Set up Docker
         uses: docker/setup-docker-action@v5
