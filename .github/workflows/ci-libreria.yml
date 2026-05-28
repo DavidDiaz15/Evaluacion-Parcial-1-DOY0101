@@ -74,5 +74,10 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-docker-action@v5
 
-      - name: Docker build
-        run: docker build -t mytest:latest -f .
+      - name: Desplegar en entorno simulado con Docker Compose
+        run: |
+          docker compose up -d --build
+          echo "Esperando a que la base de datos y la API se inicialicen..."
+          sleep 15
+          docker ps
+          docker compose down
