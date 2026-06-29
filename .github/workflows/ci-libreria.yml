@@ -68,8 +68,11 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Build with Maven
-        run: mvn clean package
+      - name: Build and Analyze with SonarCloud
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=daviddiaz15_Evaluacion-Parcial-1-DOY0101 -Dsonar.qualitygate.wait=true
 
       - name: Set up Docker
         uses: docker/setup-docker-action@v5
