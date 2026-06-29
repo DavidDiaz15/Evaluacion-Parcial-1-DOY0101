@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted # Ahora se ejecuta en tu instancia EC2
 
     steps:
       - name: Checkout del codigo
@@ -68,13 +68,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DavidDiaz15_Evaluacion-Parcial-1-DOY0101 -Dsonar.organization=daviddiaz15 -Dsonar.qualitygate.wait=false -Dsonar.cpd.exclusions=**/*Test.java -Dsonar.exclusions=**/config/*.java
 
-      - name: Set up Docker
-        uses: docker/setup-docker-action@v5
-
-      - name: Desplegar en entorno simulado con Docker Compose
+      - name: Desplegar en entorno orquestado real (AWS EC2)
         run: |
+          # Construir y levantar los servicios en segundo plano
           docker compose up -d --build
-          echo "Esperando a que la base de datos y la API se inicialicen..."
-          sleep 15
+          echo "Aplicación desplegada y corriendo en tu instancia EC2."
           docker ps
-          docker compose down
