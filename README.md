@@ -449,6 +449,39 @@ Despliegue Automático
 - Kubernetes
 
 ---
+# Desarrollo Evaluacion 3
+
+**Autores:** David Díaz, Matias Peirano  
+
+> **Nota de Evidencias:** Todas las demostraciones visuales, capturas de pantalla, accesos a la nube y comprobaciones requeridas en cada punto de este documento se encuentran adjuntas en el **Documento PDF de Evidencias** entregado junto a este proyecto.
+
+---
+
+## Requerimiento 1: Configuración de Herramientas de Monitoreo (IE1)
+
+Se implementó un sistema de observabilidad para la API de Spring Boot (Java 21) mediante la extracción de métricas en tiempo real, logs y datos de disponibilidad.
+
+**Procedimiento:**
+1. **Instrumentación de la API:** Se añadió la dependencia `micrometer-registry-prometheus` en el archivo `pom.xml` y se habilitó Spring Boot Actuator.
+2. **Configuración de Variables de Entorno:** Se expusieron los endpoints de telemetría asegurando las siguientes variables en el contenedor:
+   * `MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*`
+   * `MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED=true`
+3. **Despliegue de Prometheus:** Se configuró un contenedor de Prometheus para extraer datos (Scraping) del endpoint `/actuator/prometheus` cada 15 segundos.
+
+---
+
+## Requerimiento 2: Despliegue Orquestado en la Nube con Kubernetes (IE2)
+
+El microservicio y su base de datos (MySQL 8.0) fueron desplegados en un entorno orquestado real en la nube de AWS utilizando una instancia EC2 (`t3.medium`) con Kubernetes ligero (K3s).
+
+**Paso a Paso y Comandos Utilizados:**
+
+1. **Construcción y subida de la imagen a Docker Hub:**
+   ```bash
+   docker login
+   docker build -t <usuario>/libreria-api:latest ./libreriaApp
+   docker push <usuario>/libreria-api:latest
+---
 
 # Autor
 
