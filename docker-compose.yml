@@ -1,11 +1,13 @@
-version: '3.8'
-
 services:
   libreria-api:
     build: 
-      context: . 
+      context: ./libreriaApp
     ports:
       - "8080:8080"
+    environment:
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*
+      - MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED=true
+      - MANAGEMENT_METRICS_TAGS_APPLICATION=libreria-api
     depends_on:
       db:
         condition: service_healthy 
