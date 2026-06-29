@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout del codigo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Configurar JDK 21
         uses: actions/setup-java@v3
@@ -24,10 +26,6 @@ jobs:
 
       - name: Ejecutar pruebas unitarias
         run: mvn clean test
-
-      # If your project uses Gradle, switch cache to "gradle" above.
-      # You may also add explicit build steps (mvn -q -DskipTests package / ./gradlew build)
-      # if your dependency resolution requires it.
 
       - name: Install Snyk CLI
         run: npm install -g snyk
@@ -40,9 +38,6 @@ jobs:
 
       - name: Run Snyk test (JSON + SARIF)
         env:
-          # Optional (uncomment if you use it):
-          # SNYK_ORG: ${{ vars.SNYK_ORG }}
-          # SNYK_ORG: ${{ secrets.SNYK_ORG }}
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
           mkdir -p snyk-reports
@@ -61,15 +56,17 @@ jobs:
 
       - name: Upload Snyk reports (artifacts)
         uses: actions/upload-artifact@v4
-
         with:
           name: snyk-reports
           path: snyk-reports/
           if-no-files-found: error
           retention-days: 14
 
-      - name: Build with Maven
-        run: mvn clean package
+      - name: Build and Analyze with SonarCloud
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DavidDiaz15_Evaluacion-Parcial-1-DOY0101 -Dsonar.organization=daviddiaz15 -Dsonar.qualitygate.wait=true -Dsonar.cpd.exclusions=**/*Test.java -Dsonar.exclusions=**/config/*.java
 
       - name: Set up Docker
         uses: docker/setup-docker-action@v5
