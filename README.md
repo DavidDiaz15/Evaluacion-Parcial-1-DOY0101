@@ -449,40 +449,296 @@ Despliegue Automático
 - Kubernetes
 
 ---
-# Desarrollo Evaluacion 3
+# 📚 Desarrollo Evaluación 3
 
-**Autores:** David Díaz, Matias Peirano  
+**Autores:** David Díaz, Matías Peirano
 
-> **Nota de Evidencias:** Todas las demostraciones visuales, capturas de pantalla, accesos a la nube y comprobaciones requeridas en cada punto de este documento se encuentran adjuntas en el **Documento PDF de Evidencias** entregado junto a este proyecto.
-
----
-
-## Requerimiento 1: Configuración de Herramientas de Monitoreo (IE1)
-
-Se implementó un sistema de observabilidad para la API de Spring Boot (Java 21) mediante la extracción de métricas en tiempo real, logs y datos de disponibilidad.
-
-**Procedimiento:**
-1. **Instrumentación de la API:** Se añadió la dependencia `micrometer-registry-prometheus` en el archivo `pom.xml` y se habilitó Spring Boot Actuator.
-2. **Configuración de Variables de Entorno:** Se expusieron los endpoints de telemetría asegurando las siguientes variables en el contenedor:
-   * `MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*`
-   * `MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED=true`
-3. **Despliegue de Prometheus:** Se configuró un contenedor de Prometheus para extraer datos (Scraping) del endpoint `/actuator/prometheus` cada 15 segundos.
+> **Nota:** Todas las evidencias solicitadas (capturas de pantalla, configuraciones, despliegues, dashboards, ejecución del pipeline y validaciones) se encuentran en el documento PDF de evidencias entregado junto a este proyecto.
 
 ---
 
-## Requerimiento 2: Despliegue Orquestado en la Nube con Kubernetes (IE2)
+# Requerimiento 1 - Configuración de Herramientas de Monitoreo (IE1)
 
-El microservicio y su base de datos (MySQL 8.0) fueron desplegados en un entorno orquestado real en la nube de AWS utilizando una instancia EC2 (`t3.medium`) con Kubernetes ligero (K3s).
+Se implementó un sistema de observabilidad para la API desarrollada en **Spring Boot (Java 21)** utilizando Prometheus y Micrometer para la recolección de métricas en tiempo real.
 
-**Paso a Paso y Comandos Utilizados:**
+## Implementación
 
-1. **Construcción y subida de la imagen a Docker Hub:**
-   ```bash
-   docker login
-   docker build -t <usuario>/libreria-api:latest ./libreriaApp
-   docker push <usuario>/libreria-api:latest
+### 1. Instrumentación de la API
+
+Se agregaron las dependencias necesarias en el archivo `pom.xml`:
+
+* Spring Boot Actuator
+* Micrometer Prometheus Registry
+
+Esto permitió exponer métricas internas de la aplicación.
+
+### 2. Configuración de variables de entorno
+
+Se habilitaron los endpoints de Actuator mediante las siguientes variables:
+
+```properties
+MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=*
+MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED=true
+```
+
+### 3. Configuración de Prometheus
+
+Se desplegó un contenedor de Prometheus configurado para realizar scraping cada 15 segundos al endpoint:
+
+```
+/actuator/prometheus
+```
+
+Con ello se obtienen métricas de:
+
+* CPU
+* Memoria
+* Threads
+* JVM
+* Requests HTTP
+* Estado de la aplicación
+
 ---
 
-# Autor
+# Requerimiento 2 - Despliegue Orquestado en Kubernetes (IE2)
 
-Proyecto de ejemplo para implementación de prácticas DevSecOps y CI/CD.
+La aplicación fue desplegada sobre un clúster Kubernetes utilizando **K3s** ejecutándose en una instancia **AWS EC2 Ubuntu Server 22.04 LTS**.
+
+## Construcción de la imagen Docker
+
+```bash
+docker login
+docker build -t <usuario>/libreria-api:latest ./libreriaApp
+docker push <usuario>/libreria-api:latest
+```
+
+---
+
+## Configuración de AWS
+
+Se creó una instancia EC2 tipo:
+
+```
+t3.medium
+```
+
+Se habilitaron los siguientes puertos en el Security Group:
+
+| Puerto | Uso                 |
+| ------ | ------------------- |
+| 22     | SSH                 |
+| 8080   | API                 |
+| 30080  | NodePort Kubernetes |
+
+---
+
+## Instalación de K3s
+
+```bash
+curl -sfL https://get.k3s.io | sh -
+
+sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+```
+
+---
+
+## Despliegue de los manifiestos
+
+Se utilizaron dos manifiestos:
+
+* `mysql.yaml`
+* `api.yaml`
+
+Aplicación de recursos:
+
+```bash
+kubectl apply -f mysql.yaml
+kubectl apply -f api.yaml
+```
+
+---
+
+## Verificación
+
+Se comprobó el correcto funcionamiento mediante:
+
+```bash
+kubectl get pods -w
+
+kubectl get deployments
+
+kubectl get services
+```
+
+Finalmente se verificó el acceso desde el navegador:
+
+```
+http://IP_PUBLICA_AWS:30080/actuator
+```
+
+---
+
+# Requerimiento 3 - Dashboard de Métricas (IE3)
+
+Se implementó Grafana como plataforma de visualización conectada directamente a Prometheus.
+
+## Configuración
+
+* Despliegue del contenedor Grafana.
+* Configuración de Prometheus como Data Source.
+
+```
+http://prometheus:9090
+```
+
+Se importó el dashboard:
+
+```
+Spring Boot 3.x System Monitor
+
+Dashboard ID: 11378
+```
+
+---
+
+## Métricas monitoreadas
+
+El dashboard permite visualizar:
+
+* Tiempo de actividad (Uptime)
+* Uso de CPU
+* Uso de Memoria Heap
+* Uso de Memoria Non-Heap
+* Tráfico de Entrada/Salida
+* Estado general de la JVM
+* Disponibilidad del servicio
+
+---
+
+# Requerimiento 4 - Implementación de Políticas de Cumplimiento (IE5)
+
+Se implementaron controles de calidad y seguridad sobre el repositorio utilizando GitHub y SonarQube.
+
+## Branch Protection
+
+Se protegió la rama principal (`main`) configurando:
+
+* Prohibición de commits directos.
+* Uso obligatorio de Pull Requests.
+* Revisión antes de fusionar cambios.
+
+---
+
+## Análisis Estático (SAST)
+
+Se integró SonarQube para analizar automáticamente el código fuente en cada ejecución del pipeline.
+
+Las validaciones incluyen:
+
+* Vulnerabilidades de seguridad.
+* Security Hotspots.
+* Bugs.
+* Code Smells.
+* Deuda técnica.
+* Calidad del código.
+
+---
+
+# Requerimiento 5 - Integración CI/CD y Decisiones Técnicas (IE4)
+
+Todo el flujo de integración continua fue automatizado mediante GitHub Actions.
+
+## Flujo de trabajo
+
+```text
+Desarrollador
+
+↓
+
+Push a rama secundaria
+
+↓
+
+Pull Request
+
+↓
+
+GitHub Actions
+
+↓
+
+Análisis SonarQube
+
+↓
+
+Quality Gate
+
+↓
+
+Construcción Imagen Docker
+
+↓
+
+Despliegue Kubernetes
+```
+
+## Toma de decisiones
+
+El pipeline depende completamente del resultado del **Quality Gate** generado por SonarQube.
+
+Si el análisis cumple los estándares definidos:
+
+* Se construye la imagen Docker.
+* Se continúa con el despliegue.
+* Se actualiza el entorno Kubernetes.
+
+En caso contrario, el proceso se detiene automáticamente.
+
+---
+
+# Requerimiento 6 - Detención del Pipeline ante Fallas Críticas (IE6)
+
+Se implementó un mecanismo de bloqueo automático del pipeline cuando SonarQube detecta vulnerabilidades críticas o incumplimiento del Quality Gate.
+
+## Funcionamiento
+
+1. Se ejecuta GitHub Actions.
+2. SonarQube analiza el código.
+3. Se evalúa el Quality Gate.
+4. Si existen errores críticos:
+
+   * El pipeline cambia a estado **Failed**.
+   * No se construye la imagen Docker.
+   * No se realiza el despliegue.
+   * Se evita que código inseguro llegue al entorno de producción.
+
+Este mecanismo garantiza que únicamente versiones que cumplen con los estándares de calidad y seguridad puedan ser desplegadas.
+
+---
+
+# Tecnologías Utilizadas
+
+| Tecnología           | Uso                                    |
+| -------------------- | -------------------------------------- |
+| Java 21              | Backend                                |
+| Spring Boot          | Framework principal                    |
+| Spring Boot Actuator | Métricas de la aplicación              |
+| Micrometer           | Instrumentación                        |
+| Prometheus           | Recolección de métricas                |
+| Grafana              | Visualización                          |
+| Docker               | Contenedores                           |
+| Docker Hub           | Repositorio de imágenes                |
+| MySQL 8.0            | Base de datos                          |
+| AWS EC2              | Infraestructura en la nube             |
+| Kubernetes (K3s)     | Orquestación                           |
+| GitHub               | Control de versiones                   |
+| GitHub Actions       | CI/CD                                  |
+| SonarQube            | Análisis estático y control de calidad |
+
+---
+
+# Evidencias
+
+Las evidencias correspondientes a cada requerimiento (capturas de pantalla, configuraciones, despliegues, dashboards, ejecución del pipeline y validaciones de SonarQube) se encuentran documentadas en el PDF de evidencias entregado junto a este proyecto.
