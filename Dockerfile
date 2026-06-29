@@ -2,12 +2,8 @@ FROM eclipse-temurin:25-jdk
 
 WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+COPY target/libreria-0.0.1-SNAPSHOT.jar app.jar
 
-RUN apt-get update && apt-get install -y maven && \
-    mvn clean package -DskipTests
+EXPOSE 8080
 
-EXPOSE 8000
-
-ENTRYPOINT ["sh", "-c", "java -jar target/*.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
