@@ -8,7 +8,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # ETAPA 2: Ejecución (Run)
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:25-jdk
 WORKDIR /app
 # Extraemos SOLO el .jar generado en la etapa anterior
 COPY --from=builder /app/target/libreria-0.0.1-SNAPSHOT.jar app.jar
