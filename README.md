@@ -742,3 +742,45 @@ Este mecanismo garantiza que únicamente versiones que cumplen con los estándar
 # Evidencias
 
 Las evidencias correspondientes a cada requerimiento (capturas de pantalla, configuraciones, despliegues, dashboards, ejecución del pipeline y validaciones de SonarQube) se encuentran documentadas en el PDF de evidencias entregado junto a este proyecto.
+
+---
+
+# Evaluación Final Transversal (EFT)
+
+Esta sección documenta las implementaciones avanzadas realizadas sobre la infraestructura base para cumplir con los requerimientos de la Evaluación Final Transversal del proyecto, enfocadas en la seguridad, observabilidad y control de despliegues.
+
+## 1. Práctica de Despliegue Seguro y Continuo
+
+Para garantizar que el código que llega a producción sea estable y auditable, se modificó el pipeline de GitHub Actions agregando nuevas capas de validación:
+
+* **Pruebas de Aceptación Automatizadas:** Se implementó un *job* intermedio (`acceptance_test`) que utiliza Docker Compose para levantar la aplicación y la base de datos en un entorno simulado (*staging*). Este paso verifica que los servicios se comunican correctamente y responden a peticiones antes de aplicar los manifiestos en Kubernetes.
+* **Políticas de Aprobación de Despliegue:** Se configuró el entorno `production` mediante los *Environments* de GitHub para requerir revisión humana. El pipeline pausa su ejecución después de las pruebas y exige que un revisor autorizado apruebe manualmente el proceso antes de realizar el despliegue final en la instancia EC2.
+
+## 2. Orquestación y Monitoreo Avanzado en la Nube
+
+Adicional a la implementación de Prometheus y Grafana, se integraron tecnologías específicas para el control de red y métricas de infraestructura:
+
+* **Istio (Service Mesh):** Se inyectó la malla de servicios de Istio en el clúster de Kubernetes (K3s). Esto permite manejar la red de los microservicios de manera más eficiente, controlando el tráfico interno entre la API y la base de datos, y proporcionando métricas detalladas de la comunicación a nivel de *pods*.
+* **AWS CloudWatch:** Se instaló y configuró el agente de Amazon CloudWatch directamente en el sistema operativo del servidor (Amazon Linux). Esta herramienta permite analizar el consumo de recursos (CPU, Memoria, Disco) de la instancia EC2 a nivel de infraestructura, complementando las métricas de aplicación obtenidas con Actuator.
+
+## 3. Declaración de Uso de Inteligencia Artificial
+
+En cumplimiento con las normativas del curso, declaramos el uso de Inteligencia Artificial (IA) generativa como herramienta de apoyo durante el desarrollo de este proyecto.
+
+* **Uso de la IA:** Se utilizó IA (Gemini) como asistente técnico para la estructuración de comandos en Bash, la sintaxis de los archivos YAML de Kubernetes y la configuración y resolución de errores (*troubleshooting*) dentro del pipeline de GitHub Actions.
+* **Validación Humana:** Todos los comandos, scripts y configuraciones sugeridos por la IA fueron analizados, probados y validados por el equipo en los entornos de prueba para asegurar su funcionamiento y coherencia con la arquitectura propuesta.
+
+---
+
+## 4. Reflexiones Individuales y Conclusiones
+
+### Reflexión de David Díaz
+*El desarrollo de este proyecto me ha permitido aprender de verdad cómo todo funciona y de que trata el ramo de DevOps. A lo largo del proyecto hemos ido construyendo la infraestructura, paso a paso, empezando por trabajar con una API REST con Spring Boot (Que fue realizada en otro ramo, pero nops sirve para trabajar aqui) y GitFlow, y llegando a la automatización del ciclo de integración y despliegue continuo con GitHub Actions, Docker y Kubernetes.
+
+Fue un reto conseguir confeccionar el pipeline correctamente, de modo que cada etapa dependiera de la anterior y solo se desplegara código que cumpliera con los estándares de calidad exigidos en las rúbricas de las evaluaciones. También supuso un gran desafío la configuración del servidor en AWS, la instalación de K3s, el despliegue de los manifiestos de Kubernetes y la integración de herramientas de monitoreo como Prometheus y Grafana. El hecho de tener controles de calidad con SonarQube y la posibilidad de bloquear la evolución mediante el Quality Gate me ha hecho ver la importancia de incorporar siempre la seguridad en todo el ciclo de desarrollo.
+
+En el proyecto yo mismo contribuí activamente a la implementación y configuración de la infraestructura, y participé en la creación del pipeline de integración continua, la contenerización de la aplicación, el despliegue en Kubernetes, y la configuración de las herramientas de análisis de calidad. Además colaboré en la documentación técnica y la validación de cada uno de los requisitos solicitados, procurando que el proyecto se mantuviera lo más ordenado posible y con buena práctica en desarrollo colaborativo.
+
+Como aprendizaje personal, de esta experiencia he sacado que me ha reforzado mis conocimientos sobre automatización, sobre despliegue de aplicaciones, sobre administración de servicios en la nube, y sobre monitoreo de sistemas. También he visto confirmada la importancia del trabajo en equipo, la planificación mediante control de versiones, y la implementación de procesos que nos permitan desarrollar software de la manera más segura posible, estable, y fácil de mantener.*
+
+### Reflexión de Matías Peirano
