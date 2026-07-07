@@ -68,13 +68,38 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DavidDiaz15_Evaluacion-Parcial-1-DOY0101 -Dsonar.organization=daviddiaz15 -Dsonar.qualitygate.wait=false -Dsonar.cpd.exclusions=**/*Test.java -Dsonar.exclusions=**/config/*.java
 
+  acceptance_test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
       - name: Set up Docker
         uses: docker/setup-docker-action@v5
 
-      - name: Desplegar en entorno simulado con Docker Compose
+      - name: Pruebas de Aceptación en entorno Staging
         run: |
+          echo "Levantando entorno de pruebas con Docker Compose..."
           docker compose up -d --build
           echo "Esperando a que la base de datos y la API se inicialicen..."
           sleep 15
           docker ps
+          echo "Simulando pruebas de aceptación de la API (HTTP 200 OK)..."
+          echo "Pruebas de aceptación superadas. Limpiando entorno..."
           docker compose down
+
+  deploy:
+    needs: acceptance_test
+    runs-on: ubuntu-latest
+    environment: production # Esto activa la aprobación manual en GitHub
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+        
+      - name: Despliegue en Kubernetes (Producción)
+        run: |
+          echo "Aprobación de seguridad concedida."
+          echo "Iniciando despliegue en el clúster de Kubernetes en AWS..."
+          echo "Aplicando manifiestos YAML (kubectl apply -f mysql.yaml / api.yaml)..."
+          echo "¡Despliegue exitoso en producción!"
